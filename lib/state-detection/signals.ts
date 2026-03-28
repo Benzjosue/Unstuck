@@ -1,7 +1,6 @@
 import type { Signal } from "@/lib/types";
 
 // Weight scale: 3 = strongly associated, 2 = moderately, 1 = weakly, 0 = not associated.
-// T010b will extend this table with Emotional + Behavioral signals.
 export const SIGNAL_TABLE: Record<string, Signal> = {
   // ── Physical ────────────────────────────────────────────────────────────────
 
@@ -186,6 +185,166 @@ export const SIGNAL_TABLE: Record<string, Signal> = {
       "Wired but Tired": 2,
       "Foggy & Depleted": 3,
       "Shut Down": 2,
+    },
+  },
+
+  // ── Emotional ────────────────────────────────────────────────────────────────
+
+  anxious: {
+    id: "anxious",
+    label: "Anxious or on edge",
+    category: "emotional",
+    weights: {
+      Overactivated: 3,
+      "Tense & Overloaded": 2,
+      "Wired but Tired": 2,
+      "Foggy & Depleted": 0,
+      "Shut Down": 0,
+    },
+  },
+
+  irritable: {
+    id: "irritable",
+    label: "Irritable or easily frustrated",
+    category: "emotional",
+    weights: {
+      Overactivated: 2,
+      "Tense & Overloaded": 3,
+      "Wired but Tired": 2,
+      "Foggy & Depleted": 0,
+      "Shut Down": 0,
+    },
+  },
+
+  overwhelmed: {
+    id: "overwhelmed",
+    label: "Overwhelmed or flooded",
+    category: "emotional",
+    weights: {
+      Overactivated: 2,
+      "Tense & Overloaded": 3,
+      "Wired but Tired": 2,
+      "Foggy & Depleted": 1,
+      "Shut Down": 0,
+    },
+  },
+
+  "emotionally-flat": {
+    id: "emotionally-flat",
+    label: "Emotionally numb or flat",
+    category: "emotional",
+    weights: {
+      Overactivated: 0,
+      "Tense & Overloaded": 0,
+      "Wired but Tired": 1,
+      "Foggy & Depleted": 2,
+      "Shut Down": 3,
+    },
+  },
+
+  detached: {
+    id: "detached",
+    label: "Disconnected or detached from things",
+    category: "emotional",
+    weights: {
+      Overactivated: 0,
+      "Tense & Overloaded": 0,
+      "Wired but Tired": 1,
+      "Foggy & Depleted": 2,
+      "Shut Down": 3,
+    },
+  },
+
+  "low-mood": {
+    id: "low-mood",
+    label: "Low mood or quietly sad",
+    category: "emotional",
+    weights: {
+      Overactivated: 0,
+      "Tense & Overloaded": 1,
+      "Wired but Tired": 1,
+      "Foggy & Depleted": 2,
+      "Shut Down": 3,
+    },
+  },
+
+  dread: {
+    id: "dread",
+    label: "Sense of dread or doom",
+    category: "emotional",
+    weights: {
+      Overactivated: 2,
+      "Tense & Overloaded": 2,
+      "Wired but Tired": 2,
+      "Foggy & Depleted": 1,
+      "Shut Down": 2,
+    },
+  },
+
+  // ── Behavioral ───────────────────────────────────────────────────────────────
+
+  "scrolling-mindless": {
+    id: "scrolling-mindless",
+    label: "Mindlessly scrolling or can't stop",
+    category: "behavioral",
+    weights: {
+      Overactivated: 1,
+      "Tense & Overloaded": 1,
+      "Wired but Tired": 2,
+      "Foggy & Depleted": 2,
+      "Shut Down": 3,
+    },
+  },
+
+  "avoiding-tasks": {
+    id: "avoiding-tasks",
+    label: "Avoiding things you need to do",
+    category: "behavioral",
+    weights: {
+      Overactivated: 1,
+      "Tense & Overloaded": 2,
+      "Wired but Tired": 2,
+      "Foggy & Depleted": 2,
+      "Shut Down": 3,
+    },
+  },
+
+  snapping: {
+    id: "snapping",
+    label: "Snapping at people or easily reactive",
+    category: "behavioral",
+    weights: {
+      Overactivated: 2,
+      "Tense & Overloaded": 3,
+      "Wired but Tired": 2,
+      "Foggy & Depleted": 0,
+      "Shut Down": 0,
+    },
+  },
+
+  "cant-stop-working": {
+    id: "cant-stop-working",
+    label: "Can't stop working even when tired",
+    category: "behavioral",
+    weights: {
+      Overactivated: 1,
+      "Tense & Overloaded": 2,
+      "Wired but Tired": 3,
+      "Foggy & Depleted": 1,
+      "Shut Down": 0,
+    },
+  },
+
+  withdrawing: {
+    id: "withdrawing",
+    label: "Withdrawing or going quiet",
+    category: "behavioral",
+    weights: {
+      Overactivated: 0,
+      "Tense & Overloaded": 1,
+      "Wired but Tired": 1,
+      "Foggy & Depleted": 2,
+      "Shut Down": 3,
     },
   },
 };
