@@ -4,13 +4,15 @@ import {
   createContext,
   useContext,
   useState,
+  useEffect,
   useCallback,
   type ReactNode,
 } from "react";
 import type { CheckinSession } from "@/lib/types";
 
+const LOCAL_STORAGE_KEY = "unstuck_session_id";
+
 // ─── Initial state ─────────────────────────────────────────────────────────────
-// session_id is set on mount by T021 (read from / written to localStorage).
 
 const INITIAL_SESSION: CheckinSession = {
   session_id: "",
@@ -45,6 +47,16 @@ export const CheckinSessionContext =
 
 export function CheckinSessionProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<CheckinSession>(INITIAL_SESSION);
+
+  // On mount: read or generate the anonymous session_id from localStorage.
+  useEffect(() => {
+    let id = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem(LOCAL_STORAGE_KEY, id);
+    }
+    setSession((prev) => ({ ...prev, session_id: id as string }));
+  }, []);
 
   const updateSession = useCallback((patch: Partial<CheckinSession>) => {
     setSession((prev) => ({ ...prev, ...patch }));
