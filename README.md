@@ -18,7 +18,7 @@ Most people are told to manage their stress. Very few are taught how to recogniz
 
 I wanted to build something that closes that gap. Not a journaling app or a meditation library — something narrower and more immediately useful: a tool that helps you notice what's actually happening in your body right now, understand what state you might be in, and take one practical action to shift it.
 
-Unstuck is the first expression of that idea.
+Unstuck started as a hackathon concept — the first test of whether that idea was worth building. This is the completed version.
 
 ---
 
@@ -100,7 +100,9 @@ Landing → Check-in → Result → Reset → Feedback
 
 ## From Hackathon Concept to Completed MVP
 
-Unstuck started as a hackathon concept built around one question: *can you build something genuinely useful for nervous system awareness in a weekend?*
+Unstuck was built at Hacklanta and intentionally positioned across two tracks: **Social Good** and **Startup**.
+
+It fit Social Good because it aimed to help people recognize signs of overload earlier and access practical support before stress escalated — a real, underserved need with broad reach. It fit Startup because it was conceived as a product with genuine utility, a clear user problem, and a reason to exist beyond demo day.
 
 The initial build validated the core loop and signal-to-state mapping. After the hackathon, I committed to completing it properly — writing a full product specification, defining a product constitution, and working through a structured six-milestone task breakdown before touching production code.
 
@@ -126,7 +128,7 @@ The MVP is intentionally narrower than the broader Unstuck vision.
 
 For this first version, I constrained the product to a single tight loop: check in, identify a state, get a reset, give feedback. No accounts, no session history, no longitudinal tracking. The product constitution was deliberately strict — every rule pointed toward staying focused, safe, and shippable rather than exploring the full problem space.
 
-That constraint was the right call. Shipping a complete end-to-end product — with real state detection, real AI personalization, real database writes, explicit fallback paths, and a demo loop that completes in 45 seconds — proved the core idea works.
+That constraint was the right call. Shipping a complete end-to-end product — with real state detection, real AI personalization, real database writes, explicit fallback paths, and a demo loop that completes in 45 seconds — proved the core idea works and that it was worth building beyond the hackathon.
 
 But the tighter scope also clarified what the next version needs to do better.
 
