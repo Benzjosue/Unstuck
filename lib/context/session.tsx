@@ -26,6 +26,7 @@ const INITIAL_SESSION: CheckinSession = {
   steps: [],
   why: null,
   reset_plan_id: null,
+  duration: null,
   outcome: null,
   phase: "idle",
 };

@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { session_id, reset_plan_id, outcome } = body as Record<string, unknown>;
+  const { session_id, reset_plan_id, outcome, duration } = body as Record<string, unknown>;
 
   // Validate session_id
   if (typeof session_id !== "string" || session_id.trim() === "") {
@@ -51,6 +51,20 @@ export async function POST(request: Request) {
   }
 
   const typedOutcome = outcome as Outcome;
+  const typedDuration = typeof duration === "string" && duration.trim() !== "" ? duration : null;
+
+  // Update duration_selected on the reset_plans row.
+  // Non-blocking — failure never stops the user.
+  if (typedDuration !== null) {
+    const { error: durationError } = await supabaseServer
+      .from("reset_plans")
+      .update({ duration_selected: typedDuration })
+      .eq("id", reset_plan_id);
+
+    if (durationError) {
+      console.error("[/api/feedback] Failed to update duration_selected:", durationError.message);
+    }
+  }
 
   // Write to feedback table.
   // On failure: log server-side but do not block the user — feedback write is never user-blocking.

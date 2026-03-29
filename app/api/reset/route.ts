@@ -22,49 +22,67 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { error: "VALIDATION_ERROR", message: "Request body must be valid JSON." },
-      { status: 400 }
+      {
+        error: "VALIDATION_ERROR",
+        message: "Request body must be valid JSON.",
+      },
+      { status: 400 },
     );
   }
 
   if (typeof body !== "object" || body === null) {
     return NextResponse.json(
       { error: "VALIDATION_ERROR", message: "Request body must be an object." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
-  const { session_id, state, context, state_result_id } = body as Record<string, unknown>;
+  const { session_id, state, context, state_result_id } = body as Record<
+    string,
+    unknown
+  >;
 
   // Validate session_id
   if (typeof session_id !== "string" || session_id.trim() === "") {
     return NextResponse.json(
-      { error: "VALIDATION_ERROR", message: "session_id is required and must be a non-empty string." },
-      { status: 400 }
+      {
+        error: "VALIDATION_ERROR",
+        message: "session_id is required and must be a non-empty string.",
+      },
+      { status: 400 },
     );
   }
 
   // Validate state
   if (!VALID_STATES.includes(state as StateLabel)) {
     return NextResponse.json(
-      { error: "VALIDATION_ERROR", message: `state must be one of: ${VALID_STATES.join(", ")}.` },
-      { status: 400 }
+      {
+        error: "VALIDATION_ERROR",
+        message: `state must be one of: ${VALID_STATES.join(", ")}.`,
+      },
+      { status: 400 },
     );
   }
 
   // Validate context
   if (!VALID_CONTEXTS.includes(context as Context)) {
     return NextResponse.json(
-      { error: "VALIDATION_ERROR", message: `context must be one of: ${VALID_CONTEXTS.join(", ")}.` },
-      { status: 400 }
+      {
+        error: "VALIDATION_ERROR",
+        message: `context must be one of: ${VALID_CONTEXTS.join(", ")}.`,
+      },
+      { status: 400 },
     );
   }
 
   // Validate state_result_id
   if (typeof state_result_id !== "string" || state_result_id.trim() === "") {
     return NextResponse.json(
-      { error: "VALIDATION_ERROR", message: "state_result_id is required and must be a non-empty string." },
-      { status: 400 }
+      {
+        error: "VALIDATION_ERROR",
+        message: "state_result_id is required and must be a non-empty string.",
+      },
+      { status: 400 },
     );
   }
 
@@ -90,7 +108,7 @@ export async function POST(request: Request) {
         max_tokens: 400,
         temperature: 0.7,
       },
-      { timeout: 15000 }
+      { timeout: 15000 },
     );
 
     const rawText = completion.choices[0]?.message?.content?.trim();
@@ -141,7 +159,7 @@ export async function POST(request: Request) {
   if (resetPlanError || !resetPlanData) {
     return NextResponse.json(
       { error: "DB_ERROR", message: "Failed to save reset plan." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -161,6 +179,6 @@ export async function POST(request: Request) {
       reset_plan_id,
       ai_used,
     },
-    { status: 200 }
+    { status: 200 },
   );
 }

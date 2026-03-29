@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import ScreenWrapper from "@/components/shared/ScreenWrapper";
 import TechniqueCard from "@/components/reset/TechniqueCard";
 import StepList from "@/components/reset/StepList";
@@ -12,9 +11,14 @@ import { useCheckinSession } from "@/lib/context/session";
 
 export default function ResetPage() {
   const router = useRouter();
-  const { session } = useCheckinSession();
+  const { session, updateSession } = useCheckinSession();
 
   const [selectedDuration, setSelectedDuration] = useState<string | null>(null);
+
+  function handleDurationSelect(duration: string) {
+    setSelectedDuration(duration);
+    updateSession({ duration });
+  }
 
   // Route guard: if no technique in context, user navigated directly — send them home.
   useEffect(() => {
@@ -49,7 +53,7 @@ export default function ResetPage() {
           <DurationSelector
             options={technique.durationOptions}
             selected={selectedDuration}
-            onSelect={setSelectedDuration}
+            onSelect={handleDurationSelect}
           />
 
           {/* Step list — real steps from context */}
@@ -65,13 +69,18 @@ export default function ResetPage() {
             </p>
           </div>
 
-          {/* CTA */}
-          <Link
-            href="/feedback"
+          {/* CTA — defaults duration to first option if user never selected one */}
+          <button
+            onClick={() => {
+              if (!selectedDuration) {
+                updateSession({ duration: technique.durationOptions[0] });
+              }
+              router.push("/feedback");
+            }}
             className="block w-full bg-brand-teal text-white rounded-xl px-6 py-3 font-medium text-center hover:opacity-90 transition-opacity"
           >
             I&apos;m done
-          </Link>
+          </button>
         </div>
       </ScreenWrapper>
     </main>

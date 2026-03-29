@@ -39,6 +39,7 @@ export default function FeedbackPage() {
           session_id: session.session_id,
           reset_plan_id: session.reset_plan_id,
           outcome,
+          duration: session.duration,
         }),
       });
 

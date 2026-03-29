@@ -56,6 +56,7 @@ export type CheckinSession = {
   steps: string[];
   why: string | null;
   reset_plan_id: string | null;
+  duration: string | null;
   outcome: Outcome | null;
   phase: SessionPhase;
 };
