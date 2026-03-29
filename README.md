@@ -6,7 +6,7 @@
 
 ## Live Demo
 
-**[unstuck-4jakm0x6h-benzjosues-projects.vercel.app](https://unstuck-4jakm0x6h-benzjosues-projects.vercel.app/)**
+**[unstuck-drab.vercel.app](https://unstuck-drab.vercel.app/)**
 
 ---
 
@@ -100,7 +100,7 @@ Landing → Check-in → Result → Reset → Feedback
 
 ## From Hackathon Concept to Completed MVP
 
-Unstuck was built at Hacklanta (a 12-hour sprint) and intentionally positioned across two tracks: **Social Good** and **Startup**.
+Unstuck was built at Hacklanta as a solo project in a 12-hour sprint and intentionally positioned across two tracks: **Social Good** and **Startup**.
 
 It fit Social Good because it aimed to help people recognize signs of overload earlier and access practical support before stress escalated, a real and underserved need with broad reach. It fit Startup because it was conceived as a product with genuine utility, a clear user problem, and a reason to exist beyond demo day.
 
