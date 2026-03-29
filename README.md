@@ -1,6 +1,6 @@
 # Unstuck
 
-**A nervous system awareness and reset tool — check in, identify your state, and take action in a single focused loop.**
+**A brain-body awareness and reset tool — notice early signals of overload, identify your current state, and take practical action to shift it.**
 
 ---
 
@@ -12,17 +12,23 @@
 
 ## Why I Built This
 
-Most wellness apps ask for too much — streaks, journaling, long-term commitment — or offer advice too generic to be useful in the moment. Neither helps when you're at your desk at 2pm feeling foggy and overwhelmed and just want one practical thing to do right now.
+I've been fascinated by the brain-body connection — specifically by how quickly a person's internal state can shift when the body receives different signals, and how poorly most people are equipped to recognize those shifts before they escalate.
 
-Unstuck solves a narrow problem deliberately well: recognize what state you're in, get a reset that fits your context, and move on. No account required. No streak to maintain.
+Most people are told to manage their stress. Very few are taught how to recognize *what kind* of stress they're experiencing, or what to actually do about it in the moment that's appropriate for that specific state. The result: people push through until they crash, reach for generic advice that doesn't fit the situation, or stay stuck without understanding why.
+
+I wanted to build something that closes that gap. Not a journaling app or a meditation library — something narrower and more immediately useful: a tool that helps you notice what's actually happening in your body right now, understand what state you might be in, and take one practical action to shift it.
+
+Unstuck is the first expression of that idea.
 
 ---
 
 ## The Problem
 
-Stress and overload don't always feel the same. A racing mind, a heavy body, emotional flatness, that wired-but-can't-rest feeling — these are different states that call for different responses. Most people can't name what they're experiencing in the moment, which means they can't respond to it effectively.
+Stress and overload don't always feel the same. A racing mind, a heavy body, emotional flatness, that wired-but-can't-rest feeling — these are different internal states driven by different patterns of brain-body signaling, and they call for fundamentally different responses.
 
-Generic advice doesn't account for where you are or what you're doing. Context matters. State matters.
+Most people can't name what they're experiencing in the moment. And without that awareness, they can't respond effectively.
+
+Existing wellness tools often make this worse by jumping straight to solutions — breathing routines, meditation libraries, advice lists — without first helping the user understand *what state they're actually in*. Generic guidance doesn't account for context, state, or the person's specific moment. Awareness has to come before action.
 
 ---
 
@@ -94,9 +100,9 @@ Landing → Check-in → Result → Reset → Feedback
 
 ## From Hackathon Concept to Completed MVP
 
-Unstuck started as a hackathon concept built around one question: _can you build something genuinely useful for nervous system awareness in a weekend?_
+Unstuck started as a hackathon concept built around one question: *can you build something genuinely useful for nervous system awareness in a weekend?*
 
-The initial build validated the core loop and signal-to-state mapping. After the hackathon, I committed to completing it properly — writing a full product specification, defining a constitution for what the app must and must never do, and working through a structured six-milestone task breakdown before touching production code.
+The initial build validated the core loop and signal-to-state mapping. After the hackathon, I committed to completing it properly — writing a full product specification, defining a product constitution, and working through a structured six-milestone task breakdown before touching production code.
 
 The result is an MVP that passes a formal Definition of Done checklist, has explicit safety guardrails, handles AI failures gracefully, and is deployed to production.
 
@@ -111,6 +117,24 @@ The result is an MVP that passes a formal Definition of Done checklist, has expl
 | M4  | AI Integration       | OpenAI wired to both routes, fallback explicitly verified   |
 | M5  | Polish + Quality     | Animations, error states, mobile QA, TypeScript strict pass |
 | M6  | Final Gate + Deploy  | Definition of Done checklist, Vercel deploy, timed demo     |
+
+---
+
+## What This MVP Was Designed to Prove
+
+The MVP is intentionally narrower than the broader Unstuck vision.
+
+For this first version, I constrained the product to a single tight loop: check in, identify a state, get a reset, give feedback. No accounts, no session history, no longitudinal tracking. The product constitution was deliberately strict — every rule pointed toward staying focused, safe, and shippable rather than exploring the full problem space.
+
+That constraint was the right call. Shipping a complete end-to-end product — with real state detection, real AI personalization, real database writes, explicit fallback paths, and a demo loop that completes in 45 seconds — proved the core idea works.
+
+But the tighter scope also clarified what the next version needs to do better.
+
+The deeper Unstuck vision isn't a check-in loop. It's a brain-body awareness and regulation product — one that helps users not just get a reset, but understand *why* their body responded the way it did, recognize what states they tend toward under pressure, and build practical, usable knowledge about their own patterns over time.
+
+The next version would move closer to that vision: deepening the educational layer on the Result screen, improving the explanatory specificity of reset instructions, surfacing patterns across sessions, and developing the brain-body framing into something that actively teaches users to self-regulate — not just in one session, but over many.
+
+The MVP proves the core loop works. The next version makes the loop matter more.
 
 ---
 
@@ -266,17 +290,7 @@ cd Unstuck
 npm install
 ```
 
-Create a `.env.local` file in the project root with the variables listed below, then:
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
----
-
-## Environment Variables
+Create a `.env.local` file in the project root:
 
 ```env
 OPENAI_API_KEY=
@@ -285,64 +299,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
-All four are required. No leading spaces after `=`.
+Then:
 
-**Supabase schema:**
-
-```sql
-CREATE TABLE checkins (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id TEXT NOT NULL,
-  signals TEXT[] NOT NULL,
-  context TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TABLE state_results (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  checkin_id UUID NOT NULL,
-  session_id TEXT NOT NULL,
-  state_label TEXT NOT NULL,
-  explanation TEXT NOT NULL,
-  ai_used BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TABLE reset_plans (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  state_result_id UUID NOT NULL,
-  session_id TEXT NOT NULL,
-  technique_id TEXT NOT NULL,
-  technique_name TEXT NOT NULL,
-  technique_type TEXT NOT NULL,
-  duration_selected TEXT,
-  steps TEXT[] NOT NULL,
-  why TEXT NOT NULL,
-  ai_used BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TABLE feedback (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  reset_plan_id UUID NOT NULL,
-  session_id TEXT NOT NULL,
-  outcome TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
+```bash
+npm run dev
 ```
 
----
-
-## Deployment
-
-Deployed on Vercel. To deploy your own instance:
-
-1. Push the repo to GitHub
-2. Import at [vercel.com/new](https://vercel.com/new)
-3. Add the four environment variables under Project Settings → Environment Variables
-4. Deploy
-
-`npm run build` passes with zero errors and zero TypeScript warnings.
+Open [http://localhost:3000](http://localhost:3000). All four variables are required. To deploy your own instance, push to GitHub, import at [vercel.com/new](https://vercel.com/new), and add the four environment variables under Project Settings. `npm run build` passes with zero errors and zero TypeScript warnings.
 
 ---
 
@@ -362,14 +325,15 @@ Deployed on Vercel. To deploy your own instance:
 
 ## Future Improvements
 
-These are ideas for a future iteration. None are in the current codebase.
+These are grounded in the broader product vision — the direction a second version would move toward.
 
-- **Session history** — view past check-ins and state patterns over time
+- **Deeper educational layer** — more specific explanations of what's happening internally and why a given state tends to arise; less generic, more useful for building genuine self-awareness
+- **Brain-body pattern tracking** — session history that helps users recognize which states they tend toward, what tends to trigger them, and what consistently helps
+- **Richer reset instructions** — explanations of why a specific technique may work for a specific state, not just what to do
 - **User accounts** — optional sign-up to persist history across devices
 - **Technique rotation** — avoid recommending the same reset in consecutive sessions
-- **Onboarding flow** — brief first-visit explanation for new users
+- **Onboarding flow** — brief first-visit context that sets up the brain-body framing for new users
 - **Push notifications** — optional check-in reminders at user-defined times
-- **Biometric input** — HRV or wearable data as an additional input signal
 
 ---
 
@@ -386,9 +350,12 @@ These are ideas for a future iteration. None are in the current codebase.
 
 ## Closing
 
-Unstuck is a project I built because I wanted something like it to exist. The constraint that mattered most was written into the product constitution from the start:
+Unstuck is a project I built because I wanted something like it to exist — and because I believe people deserve better tools for understanding what their own body is telling them.
+
+The version shipped here is an intentionally tight MVP. The constraint I cared most about was written into the constitution from the start:
 
 > _"I feel off → I open Unstuck → I feel better. If the app can't deliver that in under three minutes, it has failed."_
 
-The verified demo run: 45 seconds.
+The MVP delivers on that. The verified demo run: 45 seconds.
 
+But the question that originally motivated this project is bigger: *What if people could learn to recognize their own brain-body patterns well enough to respond before stress escalates — not just once, but as a genuine skill?* The MVP is the first proof point toward that answer. What gets built next is the more interesting problem.
