@@ -1,12 +1,32 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ScreenWrapper from "@/components/shared/ScreenWrapper";
 import StateCard from "@/components/result/StateCard";
 import EducationToggle from "@/components/result/EducationToggle";
+import { useCheckinSession } from "@/lib/context/session";
 
 const PLACEHOLDER_EDUCATION =
   "When your mind and body are under sustained pressure, they often hold tension without a clear release. Your jaw, shoulders, and breathing can all tighten without you noticing — until the load becomes too much. This is a very common response to carrying a lot at once, and it tends to ease when you give your body a deliberate signal that it's okay to let go.";
 
 export default function ResultPage() {
+  const router = useRouter();
+  const { session } = useCheckinSession();
+
+  // Route guard: if no state in context, user navigated directly — send them home.
+  useEffect(() => {
+    if (session.state === null) {
+      router.replace("/");
+    }
+  }, [session.state, router]);
+
+  // Render nothing while the redirect is in flight.
+  if (session.state === null) {
+    return null;
+  }
+
   return (
     <main className="min-h-screen bg-brand-mist">
       <ScreenWrapper>
@@ -16,10 +36,10 @@ export default function ResultPage() {
             Based on what you shared, you may be in:
           </p>
 
-          {/* State card */}
+          {/* State card — real data from context */}
           <StateCard
-            state="Tense & Overloaded"
-            explanation="Your system is running hot right now. Racing thoughts and tight shoulders are your body bracing — even when nothing is actually happening. Let's give it a reason to ease off."
+            state={session.state}
+            explanation={session.explanation ?? ""}
           />
 
           {/* Education toggle */}
