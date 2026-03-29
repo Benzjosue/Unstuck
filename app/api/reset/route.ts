@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { StateLabel, Context } from "@/lib/types";
 import { selectTechnique } from "@/lib/content/resets";
+import { supabaseServer } from "@/lib/supabase/server";
 
 const VALID_STATES: StateLabel[] = [
   "Overactivated",
@@ -66,12 +67,47 @@ export async function POST(request: Request) {
   }
 
   const technique = selectTechnique(state as StateLabel, context as Context);
+  const steps = technique.defaultSteps;
+  const why = technique.defaultWhy;
+
+  // Write to reset_plans table
+  const { data: resetPlanData, error: resetPlanError } = await supabaseServer
+    .from("reset_plans")
+    .insert({
+      state_result_id,
+      session_id,
+      technique_id: technique.id,
+      technique_name: technique.name,
+      technique_type: technique.type,
+      steps,
+      why,
+      ai_used: false,
+    })
+    .select("id")
+    .single();
+
+  if (resetPlanError || !resetPlanData) {
+    return NextResponse.json(
+      { error: "DB_ERROR", message: "Failed to save reset plan." },
+      { status: 500 }
+    );
+  }
+
+  const reset_plan_id = resetPlanData.id as string;
 
   return NextResponse.json(
     {
-      technique,
-      steps: technique.defaultSteps,
-      why: technique.defaultWhy,
+      technique: {
+        id: technique.id,
+        name: technique.name,
+        type: technique.type,
+        durationOptions: technique.durationOptions,
+        isBreatheWork: technique.isBreatheWork,
+      },
+      steps,
+      why,
+      reset_plan_id,
+      ai_used: false,
     },
     { status: 200 }
   );
