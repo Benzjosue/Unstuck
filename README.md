@@ -60,35 +60,34 @@ Landing → Check-in → Result → Reset → Feedback
 
 > All screenshots are from the mobile-first production experience at 375px.
 
-### Landing
+<p align="center">
+  <img src="./screenshots/01-landing.png" alt="Landing screen" width="280" />
+</p>
 
-![Landing screen](./screenshots/01-landing.png)
 *Landing screen on mobile: product promise, primary CTA, and persistent crisis resource link.*
 
-### Check-in
+<p align="center">
+  <img src="./screenshots/03-checkin-context.png" alt="Check-in: context selection" width="280" />
+</p>
 
-![Check-in: signal selection](./screenshots/02-checkin-signals.png)
-*Check-in screen: users select the signals they are noticing across physical, mental, emotional, and behavioral categories.*
-
-![Check-in: context selection](./screenshots/03-checkin-context.png)
 *Check-in screen: context selection and submission CTA, allowing the app to tailor the reset to the user's current environment.*
 
-### Result
+<p align="center">
+  <img src="./screenshots/04-result.png" alt="Result screen" width="280" />
+</p>
 
-![Result screen](./screenshots/04-result.png)
 *Result screen: detected state label, AI-generated explanation, and education toggle.*
 
-### Reset
+<p align="center">
+  <img src="./screenshots/05-reset-steps.png" alt="Reset screen" width="280" />
+</p>
 
-![Reset: steps](./screenshots/05-reset-steps.png)
 *Reset screen: context-aware technique, conditional breathwork safety note, duration selector, and numbered step list.*
 
-![Reset: why + CTA](./screenshots/06-reset-why-cta.png)
-*Reset screen: supporting 'why this may help' explanation and completion CTA.*
+<p align="center">
+  <img src="./screenshots/07-feedback.png" alt="Feedback screen" width="280" />
+</p>
 
-### Feedback
-
-![Feedback screen](./screenshots/07-feedback.png)
 *Feedback screen: outcome selection, personalized closing message, and repeat check-in options.*
 
 ---
@@ -393,16 +392,3 @@ Unstuck is a project I built because I wanted something like it to exist. The co
 
 The verified demo run: 45 seconds.
 
----
-
-## Repo Description
-
-> A mobile-first nervous system awareness tool: check in, identify your state, and get a context-aware reset — no account required, verified demo in 45 seconds.
-
----
-
-## Title / Tagline Alternatives
-
-1. **Unstuck** — _"Notice what's off. Do something about it."_
-2. **Unstuck** — _"A fast check-in and reset tool for when you feel off but can't name why."_
-3. **Unstuck** — _"Awareness before action. A nervous system reset tool built for real moments."_
