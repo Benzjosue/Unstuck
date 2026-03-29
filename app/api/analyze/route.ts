@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { Context } from "@/lib/types";
 import { detectState } from "@/lib/state-detection/logic";
+import { fallbackExplanation } from "@/lib/content/fallbacks";
+import { supabaseServer } from "@/lib/supabase/server";
 
 const VALID_CONTEXTS: Context[] = ["private", "desk", "public", "car", "bed"];
 
@@ -53,7 +55,55 @@ export async function POST(request: Request) {
     );
   }
 
-  const state = detectState(signals as string[]);
+  const typedSignals = signals as string[];
+  const typedContext = context as Context;
 
-  return NextResponse.json({ ok: true, state }, { status: 200 });
+  // Detect state from signals
+  const state = detectState(typedSignals);
+
+  // Use fallback explanation (AI will replace this in T056)
+  const explanation = fallbackExplanation[state];
+
+  // Write to checkins table
+  const { data: checkinData, error: checkinError } = await supabaseServer
+    .from("checkins")
+    .insert({ session_id, signals: typedSignals, context: typedContext })
+    .select("id")
+    .single();
+
+  if (checkinError || !checkinData) {
+    return NextResponse.json(
+      { error: "DB_ERROR", message: "Failed to save check-in." },
+      { status: 500 }
+    );
+  }
+
+  const checkin_id = checkinData.id as string;
+
+  // Write to state_results table
+  const { data: stateResultData, error: stateResultError } = await supabaseServer
+    .from("state_results")
+    .insert({
+      checkin_id,
+      session_id,
+      state_label: state,
+      explanation,
+      ai_used: false,
+    })
+    .select("id")
+    .single();
+
+  if (stateResultError || !stateResultData) {
+    return NextResponse.json(
+      { error: "DB_ERROR", message: "Failed to save state result." },
+      { status: 500 }
+    );
+  }
+
+  const state_result_id = stateResultData.id as string;
+
+  return NextResponse.json(
+    { state, explanation, checkin_id, state_result_id, ai_used: false },
+    { status: 200 }
+  );
 }
