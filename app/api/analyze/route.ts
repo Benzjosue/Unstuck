@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { Context } from "@/lib/types";
+import { detectState } from "@/lib/state-detection/logic";
 
 const VALID_CONTEXTS: Context[] = ["private", "desk", "public", "car", "bed"];
 
@@ -52,5 +53,7 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true }, { status: 200 });
+  const state = detectState(signals as string[]);
+
+  return NextResponse.json({ ok: true, state }, { status: 200 });
 }
