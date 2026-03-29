@@ -1,17 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ScreenWrapper from "@/components/shared/ScreenWrapper";
 import OutcomePicker from "@/components/feedback/OutcomePicker";
 import ClosingMessage from "@/components/feedback/ClosingMessage";
+import { useCheckinSession } from "@/lib/context/session";
 import type { Outcome } from "@/lib/types";
 
-const PLACEHOLDER_CLOSING =
-  "That's worth something. Every time you pause and check in, you're building a little more awareness about what your system needs.";
-
 export default function FeedbackPage() {
-  const [selected, setSelected] = useState<Outcome | null>(null);
+  const router = useRouter();
+  const { session, updateSession, resetSession } = useCheckinSession();
+
+  const [closingText, setClosingText] = useState<string | null>(null);
+
+  // Route guard: if no reset_plan_id in context, user navigated directly — send them home.
+  useEffect(() => {
+    if (session.reset_plan_id === null) {
+      router.replace("/");
+    }
+  }, [session.reset_plan_id, router]);
+
+  // Render nothing while the redirect is in flight.
+  if (session.reset_plan_id === null) {
+    return null;
+  }
+
+  async function handleSelect(outcome: Outcome) {
+    // Don't re-submit if already submitted.
+    if (closingText !== null) return;
+
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: session.session_id,
+          reset_plan_id: session.reset_plan_id,
+          outcome,
+        }),
+      });
+
+      // API returns 200 even on DB failure — always use the response.
+      if (res.ok) {
+        const data: { closing_message: string } = await res.json();
+        setClosingText(data.closing_message);
+      } else {
+        // Validation error or unexpected failure — still show a message, don't leave blank.
+        setClosingText("Thanks for checking in. That counts for something.");
+      }
+    } catch {
+      // Network failure — still show a message.
+      setClosingText("Thanks for checking in. That counts for something.");
+    }
+
+    updateSession({ outcome, phase: "complete" });
+  }
+
+  const isDone = closingText !== null;
 
   return (
     <main className="min-h-screen bg-brand-mist">
@@ -26,18 +73,22 @@ export default function FeedbackPage() {
           </div>
 
           {/* Outcome picker */}
-          <OutcomePicker selected={selected} onSelect={setSelected} />
+          <OutcomePicker
+            selected={session.outcome}
+            onSelect={handleSelect}
+          />
 
           {/* Closing message — shown after selection */}
-          {selected !== null && (
-            <ClosingMessage message={PLACEHOLDER_CLOSING} />
+          {isDone && closingText && (
+            <ClosingMessage message={closingText} />
           )}
 
-          {/* Navigation links */}
-          {selected !== null && (
+          {/* Navigation links — shown after selection */}
+          {isDone && (
             <div className="flex flex-col gap-3 pt-2">
               <Link
                 href="/checkin"
+                onClick={resetSession}
                 className="block w-full bg-brand-teal text-white rounded-xl px-6 py-3 font-medium text-center hover:opacity-90 transition-opacity"
               >
                 Check in again
