@@ -20,9 +20,15 @@ export const fallbackExplanation: Record<StateLabel, string> = {
     "When everything feels distant or flat, that numbness is often a sign your system has pulled back to protect itself — not a sign that something is permanently wrong. This kind of disconnected state usually responds slowly to effort, so keeping things simple and low-demand is usually the right call. A small, gentle reset may help you find a bit more presence without asking too much of yourself right now.",
 };
 
-// Closing messages — shown after feedback is submitted. T016 populates this.
+// Closing messages — shown after feedback is submitted.
+// Rules: 1–2 sentences, non-judgmental, no certainty claims, warm and human.
 export const closingMessage: Record<Outcome, string> = {
-  better: "",
-  same: "",
-  worse: "",
+  better:
+    "Good to hear. Small moments like this can add up more than they seem.",
+
+  same:
+    "That's useful to know. Some days a reset shifts things, other days it just holds the line — and that counts too.",
+
+  worse:
+    "Thanks for being honest. Sometimes a technique doesn't land, and that's worth knowing. You can always try a different one.",
 };
