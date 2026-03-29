@@ -307,7 +307,11 @@ Then:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). All four variables are required. To deploy your own instance, push to GitHub, import at [vercel.com/new](https://vercel.com/new), and add the four environment variables under Project Settings. `npm run build` passes with zero errors and zero TypeScript warnings.
+Open [http://localhost:3000](http://localhost:3000). All four variables are required.
+
+To deploy your own instance, push to GitHub, import at [vercel.com/new](https://vercel.com/new), and add the four environment variables under Project Settings.
+
+`npm run build` passes with zero errors and zero TypeScript warnings.
 
 ---
 
