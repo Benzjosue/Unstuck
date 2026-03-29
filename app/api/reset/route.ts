@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { StateLabel, Context } from "@/lib/types";
 import { selectTechnique } from "@/lib/content/resets";
+import { buildResetPrompt } from "@/lib/openai/prompts";
+import { openai } from "@/lib/openai/client";
 import { supabaseServer } from "@/lib/supabase/server";
 
 const VALID_STATES: StateLabel[] = [
@@ -66,9 +68,59 @@ export async function POST(request: Request) {
     );
   }
 
-  const technique = selectTechnique(state as StateLabel, context as Context);
-  const steps = technique.defaultSteps;
-  const why = technique.defaultWhy;
+  const typedState = state as StateLabel;
+  const typedContext = context as Context;
+  const technique = selectTechnique(typedState, typedContext);
+
+  // Generate personalized steps and why — try AI, fall back to defaults on any failure
+  let steps: string[];
+  let why: string;
+  let ai_used: boolean;
+
+  try {
+    const prompt = buildResetPrompt(technique, typedState, typedContext);
+
+    const completion = await openai.chat.completions.create(
+      {
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: prompt.system },
+          { role: "user", content: prompt.user },
+        ],
+        max_tokens: 400,
+        temperature: 0.7,
+      },
+      { timeout: 15000 }
+    );
+
+    const rawText = completion.choices[0]?.message?.content?.trim();
+
+    if (!rawText) {
+      throw new Error("Empty response from OpenAI");
+    }
+
+    // Parse the JSON response — any parse failure triggers fallback
+    const parsed = JSON.parse(rawText) as { steps: unknown; why: unknown };
+
+    if (
+      !Array.isArray(parsed.steps) ||
+      parsed.steps.length === 0 ||
+      !parsed.steps.every((s) => typeof s === "string") ||
+      typeof parsed.why !== "string" ||
+      parsed.why.trim() === ""
+    ) {
+      throw new Error("Invalid JSON shape from OpenAI");
+    }
+
+    steps = parsed.steps as string[];
+    why = parsed.why;
+    ai_used = true;
+  } catch {
+    // Timeout, API error, empty response, JSON parse failure, or bad shape — use defaults
+    steps = technique.defaultSteps;
+    why = technique.defaultWhy;
+    ai_used = false;
+  }
 
   // Write to reset_plans table
   const { data: resetPlanData, error: resetPlanError } = await supabaseServer
@@ -81,7 +133,7 @@ export async function POST(request: Request) {
       technique_type: technique.type,
       steps,
       why,
-      ai_used: false,
+      ai_used,
     })
     .select("id")
     .single();
@@ -107,7 +159,7 @@ export async function POST(request: Request) {
       steps,
       why,
       reset_plan_id,
-      ai_used: false,
+      ai_used,
     },
     { status: 200 }
   );
