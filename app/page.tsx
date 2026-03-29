@@ -33,10 +33,12 @@ export default function LandingPage() {
           </Link>
         </div>
 
-        {/* Crisis resource — subtle, always present */}
+        {/* Crisis resource — subtle, always present, tappable on mobile */}
         <p className="mt-16 text-center text-xs text-brand-mid">
           In crisis?{" "}
-          <span className="font-medium">Text or call 988</span>
+          <a href="tel:988" className="font-medium underline">
+            Text or call 988
+          </a>
         </p>
       </ScreenWrapper>
     </main>
